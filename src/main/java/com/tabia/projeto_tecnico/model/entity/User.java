@@ -1,4 +1,4 @@
-package com.tabia.projeto_tecnico.entity;
+package com.tabia.projeto_tecnico.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,15 +11,16 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Option {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String text;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="poll_id", nullable=false)
-    private Poll poll;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private Boolean admin;
 }
