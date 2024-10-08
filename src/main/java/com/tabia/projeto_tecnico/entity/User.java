@@ -1,4 +1,4 @@
-package com.tabia.projeto_tecnico.model.entity;
+package com.tabia.projeto_tecnico.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
