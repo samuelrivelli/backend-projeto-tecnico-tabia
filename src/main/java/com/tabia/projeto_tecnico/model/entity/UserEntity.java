@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -20,7 +20,7 @@ public class User {
 
     private String firstName;
     private String lastName;
-    private String email;
+    private String username;
     private String password;
-    private Boolean admin;
+    private boolean admin;
 }

@@ -23,6 +23,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @GetMapping
     public ResponseEntity<List<CommentoDTO>> findAll(){
         List<CommentoDTO> comments = commentService.findAll();
         return ResponseEntity.ok(comments);

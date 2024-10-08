@@ -4,6 +4,7 @@ import com.tabia.projeto_tecnico.exceptions.CommentNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.CommentoDTO;
 import com.tabia.projeto_tecnico.model.entity.Comment;
 import com.tabia.projeto_tecnico.repository.CommentRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,19 +30,21 @@ public class CommentService {
         Optional<Comment> comment = commentRepository.findById(id);
 
         if(!comment.isPresent()){
-            throw new CommentNotFoundException("O comentário não foi encontrado");
+            throw new CommentNotFoundException("Comment not found");
         }
 
         return Optional.of(convertToDTO(comment.get()));
     }
 
-    private CommentoDTO convertToDTO(Comment comment) {
-        return new CommentoDTO(
-                comment.getId(),
-                comment.getContent(),
-                comment.getUser().getFirstName(),
-                comment.getUser().getLastName(),
-                comment.getCreatedAt()
-        );
+    public CommentoDTO convertToDTO(Comment comment) {
+        ModelMapper modelMapper = new ModelMapper();
+        CommentoDTO commentDTO = modelMapper.map(comment, CommentoDTO.class);
+        return commentDTO;
+    }
+
+    public Comment create(CommentoDTO commentoDTO){
+        ModelMapper modelMapper = new ModelMapper();
+        Comment comment = modelMapper.map(commentoDTO, Comment.class);
+        return comment;
     }
 }

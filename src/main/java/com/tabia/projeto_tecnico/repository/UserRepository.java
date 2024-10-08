@@ -1,9 +1,11 @@
 package com.tabia.projeto_tecnico.repository;
 
-import com.tabia.projeto_tecnico.model.entity.User;
+import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
+    Optional<UserEntity> findByLogin(String login);
 }

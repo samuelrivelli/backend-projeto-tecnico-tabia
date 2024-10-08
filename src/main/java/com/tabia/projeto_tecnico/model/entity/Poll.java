@@ -26,7 +26,7 @@ public class Poll {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable=false)
-    private User user;
+    private UserEntity user;
 
     @OneToMany(mappedBy="poll", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<Option> options = new ArrayList<>();
