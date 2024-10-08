@@ -1,7 +1,7 @@
 package com.tabia.projeto_tecnico.service;
 
 import com.tabia.projeto_tecnico.exceptions.CommentNotFoundException;
-import com.tabia.projeto_tecnico.model.dto.CommentoDTO;
+import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.model.entity.Comment;
 import com.tabia.projeto_tecnico.repository.CommentRepository;
 import org.modelmapper.ModelMapper;
@@ -18,7 +18,7 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public List<CommentoDTO> findAll(){
+    public List<CommentDTO> findAll(){
         List<Comment> comments = commentRepository.findAll();
 
         return comments.stream()
@@ -26,7 +26,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<CommentoDTO> findById(Long id){
+    public Optional<CommentDTO> findById(Long id){
         Optional<Comment> comment = commentRepository.findById(id);
 
         if(!comment.isPresent()){
@@ -36,13 +36,13 @@ public class CommentService {
         return Optional.of(convertToDTO(comment.get()));
     }
 
-    public CommentoDTO convertToDTO(Comment comment) {
+    public CommentDTO convertToDTO(Comment comment) {
         ModelMapper modelMapper = new ModelMapper();
-        CommentoDTO commentDTO = modelMapper.map(comment, CommentoDTO.class);
+        CommentDTO commentDTO = modelMapper.map(comment, CommentDTO.class);
         return commentDTO;
     }
 
-    public Comment create(CommentoDTO commentoDTO){
+    public Comment create(CommentDTO commentoDTO){
         ModelMapper modelMapper = new ModelMapper();
         Comment comment = modelMapper.map(commentoDTO, Comment.class);
         return comment;

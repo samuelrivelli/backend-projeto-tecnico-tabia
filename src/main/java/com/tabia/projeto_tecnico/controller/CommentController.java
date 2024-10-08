@@ -1,6 +1,6 @@
 package com.tabia.projeto_tecnico.controller;
 
-import com.tabia.projeto_tecnico.model.dto.CommentoDTO;
+import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,14 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentoDTO>> findAll(){
-        List<CommentoDTO> comments = commentService.findAll();
+    public ResponseEntity<List<CommentDTO>> findAll(){
+        List<CommentDTO> comments = commentService.findAll();
         return ResponseEntity.ok(comments);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<CommentoDTO>> findById(@PathVariable("id") Long id){
-        Optional<CommentoDTO> comment = commentService.findById(id);
+    public ResponseEntity<Optional<CommentDTO>> findById(@PathVariable("id") Long id){
+        Optional<CommentDTO> comment = commentService.findById(id);
         return ResponseEntity.ok(comment);
     }
 
