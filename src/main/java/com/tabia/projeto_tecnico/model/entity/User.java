@@ -20,9 +20,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
+    private String firstName;
     private String lastName;
     private String email;
-    private String passwword;
+    private String password;
     private Boolean admin;
 }
