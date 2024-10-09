@@ -1,5 +1,6 @@
 package com.tabia.projeto_tecnico.model.dto;
 
+import com.tabia.projeto_tecnico.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-    private String firstName;
-    private String lastName;
-    private String email;
+    private String username;
     private String password;
-    private Boolean admin;
+    private UserRole role;
 }

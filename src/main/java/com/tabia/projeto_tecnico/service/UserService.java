@@ -21,17 +21,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService  {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
-
-    public UserService(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
 
     public List<UserDTO> findAll(){
         List<UserEntity> users = userRepository.findAll();
@@ -56,38 +49,6 @@ public class UserService implements UserDetailsService {
         return Optional.of(convertToDTO(userEntity.get()));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(()-> new UsernameNotFoundException("User not found"));
-
-        String[] roles = userEntity.isAdmin()
-                ? new String[]{"ADMIN","USER"}
-                : new String[]{"USER"};
-
-        return User
-                .builder()
-                .username(userEntity.getUsername())
-                .password(userEntity.getPassword())
-                .roles(roles)
-                .build();
-    }
-
-    @Transactional
-    public UserEntity save(UserDTO userDTO) {
-        if (userDTO.getPassword() == null || userDTO.getPassword().trim().equals("")) {
-            throw new InvalidPasswordException("Invalid password");
-        }
-        UserEntity userEntity = create(userDTO);
-        validate(userEntity);
-
-        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-        userEntity.setPassword(encodedPassword);
-        userRepository.save(userEntity);
-        return userEntity;
-
-    }
-
 
     public UserDTO convertToDTO(UserEntity user) {
         ModelMapper modelMapper = new ModelMapper();
@@ -104,10 +65,6 @@ public class UserService implements UserDetailsService {
     public void validate(UserEntity userEntity){
         if(userEntity.getUsername() == null
                 || userEntity.getUsername().trim().equals("" )
-                || userEntity.getFirstName() == null
-                || userEntity.getFirstName().trim().equals("")
-                || userEntity.getLastName() == null
-                || userEntity.getLastName().trim().equals("")
         ){
             throw new RuntimeException("Invalid login");
         }
