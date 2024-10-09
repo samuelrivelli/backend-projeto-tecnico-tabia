@@ -24,6 +24,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
+    //configurar permissoes de roles e desativar a senha do spring security
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest httpServletRequest,

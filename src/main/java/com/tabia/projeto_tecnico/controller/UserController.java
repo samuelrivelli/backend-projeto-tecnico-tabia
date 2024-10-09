@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,6 +28,12 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> findAll(){
         List<UserDTO> users = userService.findAll();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<UserDTO>> findById(UUID id){
+        Optional<UserDTO> user = userService.findById(id);
+        return ResponseEntity.ok(user);
     }
 
 }
