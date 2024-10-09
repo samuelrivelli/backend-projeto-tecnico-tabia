@@ -1,23 +1,27 @@
 package com.tabia.projeto_tecnico.service;
 
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
+import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
 import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.PollRepository;
+import com.tabia.projeto_tecnico.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class PollService {
 
     private PollRepository pollRepository;
+    private UserRepository userRepository;
 
     public List<PollDTO> findAll() {
         List<Poll> polls = pollRepository.findAll() ;
@@ -54,13 +58,19 @@ public class PollService {
         return pollDTO;
     }
 
-    public Poll createPoll(PollDTO pollDTO, UserEntity userEntity) {
+    public Poll create(PollDTO pollDTO) {
         Poll poll = new Poll();
 
         poll.setTitle(pollDTO.getTitle());
         poll.setDescription(pollDTO.getDescription());
 
-        poll.setUser(userEntity);
+        Optional<UserEntity> user = userRepository.findById(UUID.fromString(pollDTO.getUserId()));
+
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
+        }
+
+        poll.setUser(user.get());
 
         List<Option> options = pollDTO.getOptions().stream()
                 .map(optionDTO -> new Option(null, optionDTO.getText(), poll)) // Cria nova Option
