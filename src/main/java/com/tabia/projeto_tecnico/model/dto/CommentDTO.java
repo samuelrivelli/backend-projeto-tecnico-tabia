@@ -13,8 +13,7 @@ public class CommentDTO {
 
     private Long id;
     private String content;
-    private String firsName;
-    private String lastName;
+    private String username;
     private Long pollId;
     private LocalDateTime createdAt = LocalDateTime.now();
 }
