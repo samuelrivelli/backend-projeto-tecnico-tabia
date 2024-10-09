@@ -1,9 +1,11 @@
 package com.tabia.projeto_tecnico.service;
 
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
+import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
 import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
+import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.PollRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -37,14 +39,35 @@ public class PollService {
 
 
     public PollDTO convertToDTO(Poll poll) {
-        ModelMapper modelMapper = new ModelMapper();
-        PollDTO pollDTO = modelMapper.map(poll, PollDTO.class);
+        PollDTO pollDTO = new PollDTO();
+        pollDTO.setId(poll.getId());
+        pollDTO.setTitle(poll.getTitle());
+        pollDTO.setDescription(poll.getDescription());
+        pollDTO.setUserId(String.valueOf(poll.getUser().getId()));
+
+        List<OptionDTO> optionDTOs = poll.getOptions().stream()
+                .map(option -> new OptionDTO(option.getId(), option.getText(), option.getPoll().getId()))
+                .collect(Collectors.toList());
+
+        pollDTO.setOptions(optionDTOs);
+
         return pollDTO;
     }
 
-    public Poll create(PollDTO pollDTO){
-        ModelMapper modelMapper = new ModelMapper();
-        Poll poll = modelMapper.map(pollDTO, Poll.class);
+    public Poll createPoll(PollDTO pollDTO, UserEntity userEntity) {
+        Poll poll = new Poll();
+
+        poll.setTitle(pollDTO.getTitle());
+        poll.setDescription(pollDTO.getDescription());
+
+        poll.setUser(userEntity);
+
+        List<Option> options = pollDTO.getOptions().stream()
+                .map(optionDTO -> new Option(null, optionDTO.getText(), poll)) // Cria nova Option
+                .collect(Collectors.toList());
+
+        poll.setOptions(options);
+
         return poll;
     }
 

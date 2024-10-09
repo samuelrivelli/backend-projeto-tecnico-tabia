@@ -1,19 +1,12 @@
 package com.tabia.projeto_tecnico.service;
 
-import com.tabia.projeto_tecnico.exceptions.InvalidPasswordException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.UserDTO;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,11 +56,4 @@ public class UserService  {
         return userEntity;
     }
 
-    public void validate(UserEntity userEntity){
-        if(userEntity.getUsername() == null
-                || userEntity.getUsername().trim().equals("" )
-        ){
-            throw new RuntimeException("Invalid login");
-        }
-    }
 }
