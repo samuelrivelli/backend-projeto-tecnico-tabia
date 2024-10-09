@@ -1,7 +1,7 @@
 package com.tabia.projeto_tecnico.config;
 
-import com.tabia.projeto_tecnico.Security.JwtAuthFilter;
-import com.tabia.projeto_tecnico.Security.JwtService;
+import com.tabia.projeto_tecnico.security.JwtAuthFilter;
+import com.tabia.projeto_tecnico.security.JwtService;
 import com.tabia.projeto_tecnico.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
@@ -34,6 +37,20 @@ public class SecurityConfig {
     @Bean
     public OncePerRequestFilter jwtFilter() {
         return new JwtAuthFilter(jwtService, userService);
+    }
+
+    //configurar roles e desativar senha padrao do spring security
+    @Bean
+    DefaultSecurityFilterChain springSecurity(HttpSecurity http) throws Exception {
+        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+        // set the name of the attribute the CsrfToken will be populated on
+        requestHandler.setCsrfRequestAttributeName(null);
+        http
+                .csrf((csrf) -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(requestHandler)
+                );
+        return http.build();
     }
 
     @Bean

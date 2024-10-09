@@ -1,4 +1,4 @@
-package com.tabia.projeto_tecnico.Security;
+package com.tabia.projeto_tecnico.security;
 
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import io.jsonwebtoken.Claims;

@@ -42,6 +42,11 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<UserDTO> findById(UUID id){
+
+        if (id == null) {
+            throw new IllegalArgumentException("The given id must not be null");
+        }
+
         Optional<UserEntity> userEntity = userRepository.findById(id);
 
         if(!userEntity.isPresent()){

@@ -1,4 +1,4 @@
-package com.tabia.projeto_tecnico.Security;
+package com.tabia.projeto_tecnico.security;
 
 import com.tabia.projeto_tecnico.service.UserService;
 
@@ -23,8 +23,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.userService = userService;
     }
-
-    //configurar permissoes de roles e desativar a senha do spring security
 
     @Override
     protected void doFilterInternal(
