@@ -6,6 +6,7 @@ import com.tabia.projeto_tecnico.model.dto.UserDTO;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -34,7 +35,7 @@ public class UserService  {
                 .collect(Collectors.toList());
     }
 
-    public Optional<UserDTO> findById(UUID id){
+    public Optional<UserDTO> findById(@NotNull UUID id){
 
         if (id == null) {
             throw new IllegalArgumentException("The given id must not be null");

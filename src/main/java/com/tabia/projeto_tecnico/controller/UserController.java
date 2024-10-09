@@ -5,6 +5,7 @@ import com.tabia.projeto_tecnico.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<UserDTO>> findById(UUID id){
+    public ResponseEntity<Optional<UserDTO>> findById(@PathVariable UUID id){
         Optional<UserDTO> user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
