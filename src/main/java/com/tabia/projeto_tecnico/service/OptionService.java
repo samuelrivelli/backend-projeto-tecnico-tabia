@@ -1,9 +1,12 @@
 package com.tabia.projeto_tecnico.service;
 
 import com.tabia.projeto_tecnico.exceptions.OptionNotFoundException;
+import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.entity.Option;
+import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.repository.OptionRepository;
+import com.tabia.projeto_tecnico.repository.PollRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,9 @@ public class OptionService {
 
     @Autowired
     private OptionRepository optionRepository;
+
+    @Autowired
+    private PollRepository pollRepository;
 
     public List<OptionDTO> findAll(){
         List<Option> options = optionRepository.findAll();
@@ -38,14 +44,26 @@ public class OptionService {
 
 
     public OptionDTO convertToDTO(Option option) {
-        ModelMapper modelMapper = new ModelMapper();
-        OptionDTO optionDTO = modelMapper.map(option, OptionDTO.class);
-        return optionDTO;
+       OptionDTO optionDTO = new OptionDTO();
+       optionDTO.setId(option.getId());
+       optionDTO.setText(option.getText());
+       optionDTO.setPoolId(option.getPoll().getId());
+
+       return optionDTO;
     }
 
     public Option create(OptionDTO optionDTO){
-        ModelMapper modelMapper = new ModelMapper();
-        Option option = modelMapper.map(optionDTO, Option.class);
+        Option option = new Option();
+        option.setText(optionDTO.getText());
+
+        Optional<Poll> poll = pollRepository.findById(optionDTO.getPoolId());
+
+        if(!poll.isPresent()){
+            throw new PollNotFoundException("Poll not found");
+        }
+
+        option.setPoll(poll.get());
+
         return option;
     }
 }

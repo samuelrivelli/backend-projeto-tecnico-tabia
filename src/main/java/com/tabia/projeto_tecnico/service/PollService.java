@@ -9,7 +9,7 @@ import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.PollRepository;
 import com.tabia.projeto_tecnico.repository.UserRepository;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +20,10 @@ import java.util.stream.Collectors;
 @Service
 public class PollService {
 
+    @Autowired
     private PollRepository pollRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     public List<PollDTO> findAll() {
