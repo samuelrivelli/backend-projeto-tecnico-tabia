@@ -1,13 +1,20 @@
 package com.tabia.projeto_tecnico.service;
 
+import com.tabia.projeto_tecnico.exceptions.OptionNotFoundException;
+import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
+import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.VoteNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.VoteDTO;
+import com.tabia.projeto_tecnico.model.entity.Option;
+import com.tabia.projeto_tecnico.model.entity.Poll;
+import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.model.entity.Vote;
+import com.tabia.projeto_tecnico.repository.OptionRepository;
+import com.tabia.projeto_tecnico.repository.PollRepository;
+import com.tabia.projeto_tecnico.repository.UserRepository;
 import com.tabia.projeto_tecnico.repository.VoteRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +25,16 @@ public class VoteService {
 
     @Autowired
     private VoteRepository voteRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PollRepository pollRepository;
+
+    @Autowired
+    private OptionRepository optionRepository;
+
 
     public List<VoteDTO> findAll(){
         List<Vote> votes = voteRepository.findAll();
@@ -38,14 +55,46 @@ public class VoteService {
     }
 
     public VoteDTO convertToDTO(Vote vote){
-        ModelMapper modelMapper = new ModelMapper();
-        VoteDTO voteDTO = modelMapper.map(modelMapper, VoteDTO.class);
+        VoteDTO voteDTO = new VoteDTO();
+        voteDTO.setId(vote.getId());
+        voteDTO.setUserId(vote.getUser().getId());
+        voteDTO.setOptionId(vote.getOption().getId());
+        voteDTO.setPollId(vote.getPoll().getId());
+
         return voteDTO;
+
     }
 
     public Vote create(VoteDTO voteDTO){
-        ModelMapper modelMapper = new ModelMapper();
-        Vote vote = modelMapper.map(voteDTO, Vote.class);
+       Vote vote = new Vote();
+
+       vote.setId(voteDTO.getId());
+
+        Optional<UserEntity> user = userRepository.findById(voteDTO.getUserId());
+
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
+        }
+
+        vote.setUser(user.get());
+
+        Optional<Poll> poll = pollRepository.findById(voteDTO.getPollId());
+
+        if(!poll.isPresent()){
+            throw new PollNotFoundException("Poll not found");
+        }
+
+        vote.setPoll(poll.get());
+
+        Optional<Option> option = optionRepository.findById(voteDTO.getOptionId());
+
+        if(!option.isPresent()){
+            throw new OptionNotFoundException("Option not found");
+        }
+
+        vote.setOption(option.get());
+
         return vote;
+
     }
 }

@@ -1,10 +1,16 @@
 package com.tabia.projeto_tecnico.service;
 
 import com.tabia.projeto_tecnico.exceptions.CommentNotFoundException;
+import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
+import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.model.entity.Comment;
+import com.tabia.projeto_tecnico.model.entity.Option;
+import com.tabia.projeto_tecnico.model.entity.Poll;
+import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.CommentRepository;
-import org.modelmapper.ModelMapper;
+import com.tabia.projeto_tecnico.repository.PollRepository;
+import com.tabia.projeto_tecnico.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +23,12 @@ public class CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PollRepository pollRepository;
 
     public List<CommentDTO> findAll(){
         List<Comment> comments = commentRepository.findAll();
@@ -37,14 +49,39 @@ public class CommentService {
     }
 
     public CommentDTO convertToDTO(Comment comment) {
-        ModelMapper modelMapper = new ModelMapper();
-        CommentDTO commentDTO = modelMapper.map(comment, CommentDTO.class);
-        return commentDTO;
+       CommentDTO commentDTO = new CommentDTO();
+       commentDTO.setId(comment.getId());
+       commentDTO.setContent(comment.getContent());
+       commentDTO.setUserId(comment.getUser().getId());
+       commentDTO.setPollId(comment.getPoll().getId());
+       commentDTO.setCreatedAt(comment.getCreatedAt());
+
+       return commentDTO;
     }
 
     public Comment create(CommentDTO commentoDTO){
-        ModelMapper modelMapper = new ModelMapper();
-        Comment comment = modelMapper.map(commentoDTO, Comment.class);
+        Comment comment = new Comment();
+        comment.setId(commentoDTO.getId());
+        comment.setContent(commentoDTO.getContent());
+
+        Optional<UserEntity> user = userRepository.findById(commentoDTO.getUserId());
+
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
+        }
+
+        comment.setUser(user.get());
+
+        Optional<Poll> poll = pollRepository.findById(commentoDTO.getPollId());
+
+        if(!poll.isPresent()){
+            throw new PollNotFoundException("Poll not found");
+        }
+
+        comment.setPoll(poll.get());
+        comment.setCreatedAt(commentoDTO.getCreatedAt());
+
         return comment;
+
     }
 }
