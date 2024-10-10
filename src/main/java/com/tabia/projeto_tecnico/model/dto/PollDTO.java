@@ -4,16 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentDTO {
-
+public class PollDTO {
     private Long id;
-    private String content;
-    private String username;
-    private Long pollId;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private String title;
+    private String description;
+    private String userId;
+    private List<OptionDTO> options;
 }

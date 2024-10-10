@@ -29,8 +29,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers("/api/users").permitAll()
-                        .requestMatchers( "/api/comments").permitAll()
+                        .requestMatchers("/api/v1/users/**").permitAll()
+                        .requestMatchers( "/api/v1/comments/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
