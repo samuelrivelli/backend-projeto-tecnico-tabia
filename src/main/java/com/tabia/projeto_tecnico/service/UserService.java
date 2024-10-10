@@ -28,7 +28,7 @@ public class UserService  {
                 .collect(Collectors.toList());
     }
 
-    public Optional<UserDTO> findById(@NotNull UUID id){
+    public Optional<UserDTO> findById(@NotNull Long id){
 
         if (id == null) {
             throw new IllegalArgumentException("The given id must not be null");

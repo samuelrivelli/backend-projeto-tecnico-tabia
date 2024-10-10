@@ -50,7 +50,7 @@ public class PollService {
         pollDTO.setId(poll.getId());
         pollDTO.setTitle(poll.getTitle());
         pollDTO.setDescription(poll.getDescription());
-        pollDTO.setUserId(String.valueOf(poll.getUser().getId()));
+        pollDTO.setUserId(poll.getUser().getId());
 
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
                 .map(option -> new OptionDTO(option.getId(), option.getText(), option.getPoll().getId()))
@@ -68,7 +68,7 @@ public class PollService {
         poll.setTitle(pollDTO.getTitle());
         poll.setDescription(pollDTO.getDescription());
 
-        Optional<UserEntity> user = userRepository.findById(UUID.fromString(pollDTO.getUserId()));
+        Optional<UserEntity> user = userRepository.findById(pollDTO.getUserId());
 
         if(!user.isPresent()){
             throw new UserNotFoundException("User not found");
