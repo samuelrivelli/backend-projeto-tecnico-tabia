@@ -1,0 +1,269 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: samuelrivelli
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: users
+      comment: "Criação da tabela users"
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: users
+
+  - changeSet:
+      id: 2
+      author: samuel
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: poll
+      comment: "Criação da tabela poll"
+      changes:
+        - createTable:
+            tableName: poll
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: poll
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_poll_user
+            onDelete: CASCADE
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: poll
+            constraintName: fk_poll_user
+        - dropTable:
+            tableName: poll
+
+  - changeSet:
+      id: 3
+      author: samuel
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: option
+      comment: "Criação da tabela option"
+      changes:
+        - createTable:
+            tableName: option
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: poll_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: option
+            baseColumnNames: poll_id
+            referencedTableName: poll
+            referencedColumnNames: id
+            constraintName: fk_option_poll
+            onDelete: CASCADE
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: option
+            constraintName: fk_option_poll
+        - dropTable:
+            tableName: option
+
+  - changeSet:
+      id: 4
+      author: samuel
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: vote
+      comment: "Criação da tabela vote"
+      changes:
+        - createTable:
+            tableName: vote
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: option_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: poll_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: vote
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_vote_user
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: vote
+            baseColumnNames: option_id
+            referencedTableName: option
+            referencedColumnNames: id
+            constraintName: fk_vote_option
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: vote
+            baseColumnNames: poll_id
+            referencedTableName: poll
+            referencedColumnNames: id
+            constraintName: fk_vote_poll
+            onDelete: CASCADE
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: vote
+            constraintName: fk_vote_poll
+        - dropForeignKeyConstraint:
+            baseTableName: vote
+            constraintName: fk_vote_option
+        - dropForeignKeyConstraint:
+            baseTableName: vote
+            constraintName: fk_vote_user
+        - dropTable:
+            tableName: vote
+
+  - changeSet:
+      id: 5
+      author: samuel
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: comment
+      comment: "Criação da tabela comment"
+      changes:
+        - createTable:
+            tableName: comment
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: content
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: poll_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_comment_user
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: poll_id
+            referencedTableName: poll
+            referencedColumnNames: id
+            constraintName: fk_comment_poll
+            onDelete: CASCADE
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: comment
+            constraintName: fk_comment_poll
+        - dropForeignKeyConstraint:
+            baseTableName: comment
+            constraintName: fk_comment_user
+        - dropTable:
+            tableName: comment
+
+  - changeSet:
+      id: 6
+      author: samuel
+      changes:
+        - renameTable:
+            oldTableName: poll_option
+            newTableName: option
