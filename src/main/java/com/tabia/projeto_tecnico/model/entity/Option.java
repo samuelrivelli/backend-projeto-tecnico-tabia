@@ -1,5 +1,6 @@
 package com.tabia.projeto_tecnico.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class Option {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="poll_id", nullable=false)
+    @JsonBackReference
     private Poll poll;
 }

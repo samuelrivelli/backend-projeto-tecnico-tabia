@@ -4,11 +4,9 @@ import com.tabia.projeto_tecnico.model.dto.PollDTO;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.service.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +32,12 @@ public class PollController {
     public ResponseEntity<Optional<PollDTO>> findById(@PathVariable("id") Long id) {
         Optional<PollDTO> poll = pollService.findById(id);
         return ResponseEntity.ok(poll);
+    }
+
+    @PostMapping
+    public ResponseEntity<Poll> post (@RequestBody PollDTO pollDTO){
+        Optional<Poll> poll = Optional.ofNullable(pollService.save(pollDTO));
+        return new ResponseEntity<>(poll.get(), HttpStatus.CREATED);
     }
 
 

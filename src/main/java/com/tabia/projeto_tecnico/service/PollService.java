@@ -44,6 +44,11 @@ public class PollService {
         return Optional.of(convertToDTO(poll.get()));
     }
 
+    public Poll save(PollDTO pollDTO){
+        Poll poll = create(pollDTO);
+        return pollRepository.save(poll);
+    }
+
 
     public PollDTO convertToDTO(Poll poll) {
         PollDTO pollDTO = new PollDTO();
@@ -64,7 +69,6 @@ public class PollService {
     public Poll create(PollDTO pollDTO) {
         Poll poll = new Poll();
 
-        poll.setId(pollDTO.getId());
         poll.setTitle(pollDTO.getTitle());
         poll.setDescription(pollDTO.getDescription());
 
