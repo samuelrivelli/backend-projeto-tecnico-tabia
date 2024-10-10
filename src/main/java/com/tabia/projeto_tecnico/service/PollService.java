@@ -49,6 +49,32 @@ public class PollService {
         return pollRepository.save(poll);
     }
 
+    public Poll update(Long id, PollDTO pollDTO) {
+        Optional<Poll> optionalPoll = pollRepository.findById(id);
+
+        if (!optionalPoll.isPresent()) {
+            throw new PollNotFoundException("Poll not found");
+        }
+
+        Poll existingPoll = optionalPoll.get();
+
+        existingPoll.setTitle(pollDTO.getTitle());
+        existingPoll.setDescription(pollDTO.getDescription());
+
+        if (pollDTO.getUserId() != null) {
+            Optional<UserEntity> user = userRepository.findById(pollDTO.getUserId());
+            if (!user.isPresent()) {
+                throw new UserNotFoundException("User not found");
+            }
+            existingPoll.setUser(user.get());
+        }
+
+
+        return pollRepository.save(existingPoll);
+    }
+
+
+
 
     public PollDTO convertToDTO(Poll poll) {
         PollDTO pollDTO = new PollDTO();
