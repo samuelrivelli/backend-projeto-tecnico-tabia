@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.annotation.Repeatable;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,13 @@ public class PollController {
     public ResponseEntity<Poll> post (@RequestBody PollDTO pollDTO){
         Optional<Poll> poll = Optional.ofNullable(pollService.save(pollDTO));
         return new ResponseEntity<>(poll.get(), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PollDTO> put (@PathVariable Long id, @RequestBody PollDTO pollDTO){
+        Poll updatedPoll = pollService.update(id, pollDTO);
+        PollDTO updatedPollDTO = pollService.convertToDTO(updatedPoll); // Converter para DTO
+        return ResponseEntity.ok(updatedPollDTO);
     }
 
 
