@@ -64,6 +64,7 @@ public class PollService {
     public Poll create(PollDTO pollDTO) {
         Poll poll = new Poll();
 
+        poll.setId(pollDTO.getId());
         poll.setTitle(pollDTO.getTitle());
         poll.setDescription(pollDTO.getDescription());
 
