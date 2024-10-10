@@ -54,7 +54,6 @@ public class OptionService {
 
     public Option create(OptionDTO optionDTO){
         Option option = new Option();
-        option.setId(optionDTO.getId());
         option.setText(optionDTO.getText());
 
         Optional<Poll> poll = pollRepository.findById(optionDTO.getPoolId());

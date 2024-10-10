@@ -1,5 +1,6 @@
 package com.tabia.projeto_tecnico.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Poll {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable=false)
+    @JsonManagedReference
     private UserEntity user;
 
     @OneToMany(mappedBy="poll", cascade=CascadeType.ALL, orphanRemoval=true)

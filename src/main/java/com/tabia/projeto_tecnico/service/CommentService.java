@@ -61,7 +61,6 @@ public class CommentService {
 
     public Comment create(CommentDTO commentoDTO){
         Comment comment = new Comment();
-        comment.setId(commentoDTO.getId());
         comment.setContent(commentoDTO.getContent());
 
         Optional<UserEntity> user = userRepository.findById(commentoDTO.getUserId());

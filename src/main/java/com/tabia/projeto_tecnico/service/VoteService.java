@@ -68,8 +68,6 @@ public class VoteService {
     public Vote create(VoteDTO voteDTO){
        Vote vote = new Vote();
 
-       vote.setId(voteDTO.getId());
-
         Optional<UserEntity> user = userRepository.findById(voteDTO.getUserId());
 
         if(!user.isPresent()){
