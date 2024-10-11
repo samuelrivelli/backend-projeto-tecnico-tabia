@@ -2,9 +2,9 @@ package com.tabia.projeto_tecnico.service;
 
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
+import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
-import com.tabia.projeto_tecnico.model.dto.VoteDTO;
 import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
@@ -12,7 +12,6 @@ import com.tabia.projeto_tecnico.repository.PollRepository;
 import com.tabia.projeto_tecnico.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,6 +85,7 @@ public class PollService {
         pollDTO.setDescription(poll.getDescription());
         pollDTO.setUserId(poll.getUser().getId());
 
+        // Mapeia as opções
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
                 .map(option -> {
                     Long voteCount = option.getVotes() != null ? (long) option.getVotes().size() : 0;
@@ -101,8 +101,22 @@ public class PollService {
 
         pollDTO.setOptions(optionDTOs);
 
+
+        List<CommentDTO> commentDTOs = poll.getComments().stream()
+                .map(comment -> new CommentDTO(
+                        comment.getId(),
+                        comment.getContent(),
+                        comment.getUser().getId(),
+                        comment.getPoll().getId(),
+                        comment.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+
+        pollDTO.setComments(commentDTOs);
+
         return pollDTO;
     }
+
 
 
 

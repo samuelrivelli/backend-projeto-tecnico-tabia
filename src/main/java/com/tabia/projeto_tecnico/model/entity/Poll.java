@@ -32,4 +32,7 @@ public class Poll {
 
     @OneToMany(mappedBy="poll", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<Option> options = new ArrayList<>();
+
+    @OneToMany(mappedBy="poll", cascade=CascadeType.ALL, orphanRemoval=true)
+    private List<Comment> comments = new ArrayList<>();
 }

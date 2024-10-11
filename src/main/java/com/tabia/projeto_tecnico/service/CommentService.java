@@ -48,6 +48,13 @@ public class CommentService {
         return Optional.of(convertToDTO(comment.get()));
     }
 
+    public CommentDTO save(CommentDTO commentDTO){
+        Comment comment = create(commentDTO);
+        Comment savedComment = commentRepository.save(comment);
+
+        return convertToDTO(savedComment);
+    }
+
     public CommentDTO convertToDTO(Comment comment) {
        CommentDTO commentDTO = new CommentDTO();
        commentDTO.setId(comment.getId());

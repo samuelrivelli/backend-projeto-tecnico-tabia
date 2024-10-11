@@ -61,6 +61,7 @@ public class VoteService {
         return convertToDTO(savedVote);
     }
 
+
     public VoteDTO convertToDTO(Vote vote){
         VoteDTO voteDTO = new VoteDTO();
         voteDTO.setId(vote.getId());

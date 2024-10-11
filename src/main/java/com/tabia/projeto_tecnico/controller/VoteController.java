@@ -4,6 +4,7 @@ import com.tabia.projeto_tecnico.model.dto.VoteDTO;
 import com.tabia.projeto_tecnico.model.entity.Vote;
 import com.tabia.projeto_tecnico.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +35,8 @@ public class VoteController {
     }
 
     @PostMapping
-    public ResponseEntity<VoteDTO> createVote(@RequestBody VoteDTO voteDTO) {
+    public ResponseEntity<VoteDTO> post(@RequestBody VoteDTO voteDTO) {
         VoteDTO createdVote = voteService.save(voteDTO);
-        return ResponseEntity.ok(createdVote);
+        return new ResponseEntity<>(createdVote, HttpStatus.CREATED );
     }
 }
