@@ -14,4 +14,5 @@ public class OptionDTO {
     private String text;
     private Long poolId;
     private List<VoteDTO> votes;
+    private Long voteCount;
 }

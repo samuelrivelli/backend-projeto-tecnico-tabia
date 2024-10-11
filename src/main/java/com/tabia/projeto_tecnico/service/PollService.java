@@ -88,15 +88,12 @@ public class PollService {
 
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
                 .map(option -> {
-                    List<VoteDTO> voteDTOs = option.getVotes().stream()
-                            .map(vote -> new VoteDTO(vote.getId(), vote.getUser().getId(), vote.getOption().getId(), vote.getPoll().getId()))
-                            .collect(Collectors.toList());
-
+                    Long voteCount = option.getVotes() != null ? (long) option.getVotes().size() : 0;
                     OptionDTO optionDTO = new OptionDTO();
                     optionDTO.setId(option.getId());
                     optionDTO.setText(option.getText());
                     optionDTO.setPoolId(poll.getId());
-                    optionDTO.setVotes(voteDTOs);
+                    optionDTO.setVoteCount(voteCount);
 
                     return optionDTO;
                 })
@@ -106,6 +103,7 @@ public class PollService {
 
         return pollDTO;
     }
+
 
 
     public Poll create(PollDTO pollDTO) {
