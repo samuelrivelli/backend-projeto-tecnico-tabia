@@ -50,7 +50,7 @@ public class PollService {
         return convertToDTO(savedPoll);
     }
 
-    public Poll update(Long id, PollDTO pollDTO) {
+    public PollDTO update(Long id, PollDTO pollDTO) {
         Optional<Poll> optionalPoll = pollRepository.findById(id);
 
         if (!optionalPoll.isPresent()) {
@@ -70,8 +70,9 @@ public class PollService {
             existingPoll.setUser(user.get());
         }
 
+        Poll updatedPoll = pollRepository.save(existingPoll);
 
-        return pollRepository.save(existingPoll);
+        return convertToDTO(updatedPoll);
     }
 
 
