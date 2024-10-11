@@ -39,4 +39,10 @@ public class OptionController {
         return new ResponseEntity<>(option.get(), HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<OptionDTO> put(@PathVariable Long id, @RequestBody OptionDTO optionDTO){
+        OptionDTO option = optionService.update(id,optionDTO);
+        return ResponseEntity.ok(option);
+    }
+
 }

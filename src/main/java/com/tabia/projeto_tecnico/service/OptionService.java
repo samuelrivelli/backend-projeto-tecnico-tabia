@@ -48,6 +48,29 @@ public class OptionService {
         return convertToDTO(savedOption);
     }
 
+    public OptionDTO update(Long id, OptionDTO optionDTO){
+        Optional<Option> optionalOption = optionRepository.findById(id);
+
+        if(!optionalOption.isPresent()){
+            throw new OptionNotFoundException("Option not found");
+        }
+
+        Option existingOption = optionalOption.get();
+
+        existingOption.setText(optionDTO.getText());
+
+        if(optionDTO.getPoolId() != null) {
+            Optional<Poll> poll = pollRepository.findById(optionDTO.getPoolId());
+            if(!poll.isPresent()){
+                throw new PollNotFoundException("Poll not found");
+            }
+            existingOption.setPoll(poll.get());
+        }
+
+        Option updatedOption = optionRepository.save(existingOption);
+
+        return convertToDTO(updatedOption);
+    }
 
 
 
