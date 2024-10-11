@@ -2,6 +2,7 @@ package com.tabia.projeto_tecnico.service;
 
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
+import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
 import com.tabia.projeto_tecnico.model.entity.Option;
@@ -11,10 +12,8 @@ import com.tabia.projeto_tecnico.repository.PollRepository;
 import com.tabia.projeto_tecnico.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,12 +43,14 @@ public class PollService {
         return Optional.of(convertToDTO(poll.get()));
     }
 
-    public Poll save(PollDTO pollDTO){
+    public PollDTO save(PollDTO pollDTO) {
         Poll poll = create(pollDTO);
-        return pollRepository.save(poll);
+        Poll savedPoll = pollRepository.save(poll);
+
+        return convertToDTO(savedPoll);
     }
 
-    public Poll update(Long id, PollDTO pollDTO) {
+    public PollDTO update(Long id, PollDTO pollDTO) {
         Optional<Poll> optionalPoll = pollRepository.findById(id);
 
         if (!optionalPoll.isPresent()) {
@@ -69,8 +70,9 @@ public class PollService {
             existingPoll.setUser(user.get());
         }
 
+        Poll updatedPoll = pollRepository.save(existingPoll);
 
-        return pollRepository.save(existingPoll);
+        return convertToDTO(updatedPoll);
     }
 
 
@@ -84,13 +86,38 @@ public class PollService {
         pollDTO.setUserId(poll.getUser().getId());
 
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
-                .map(option -> new OptionDTO(option.getId(), option.getText(), option.getPoll().getId()))
+                .map(option -> {
+                    Long voteCount = option.getVotes() != null ? (long) option.getVotes().size() : 0;
+                    OptionDTO optionDTO = new OptionDTO();
+                    optionDTO.setId(option.getId());
+                    optionDTO.setText(option.getText());
+                    optionDTO.setPoolId(poll.getId());
+                    optionDTO.setVoteCount(voteCount);
+
+                    return optionDTO;
+                })
                 .collect(Collectors.toList());
 
         pollDTO.setOptions(optionDTOs);
 
+
+        List<CommentDTO> commentDTOs = poll.getComments().stream()
+                .map(comment -> new CommentDTO(
+                        comment.getId(),
+                        comment.getContent(),
+                        comment.getUser().getId(),
+                        comment.getPoll().getId(),
+                        comment.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+
+        pollDTO.setComments(commentDTOs);
+
         return pollDTO;
     }
+
+
+
 
     public Poll create(PollDTO pollDTO) {
         Poll poll = new Poll();
@@ -107,12 +134,18 @@ public class PollService {
         poll.setUser(user.get());
 
         List<Option> options = pollDTO.getOptions().stream()
-                .map(optionDTO -> new Option(null, optionDTO.getText(), poll)) // Cria nova Option
+                .map(optionDTO -> {
+                    Option option = new Option();
+                    option.setText(optionDTO.getText());
+                    option.setPoll(poll);
+                    return option;
+                })
                 .collect(Collectors.toList());
 
         poll.setOptions(options);
 
-        return poll;
+        return pollRepository.save(poll);
     }
+
 
 }

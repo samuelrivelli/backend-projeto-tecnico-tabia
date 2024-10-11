@@ -15,4 +15,5 @@ public class PollDTO {
     private String description;
     private Long userId;
     private List<OptionDTO> options;
+    private List<CommentDTO> comments;
 }

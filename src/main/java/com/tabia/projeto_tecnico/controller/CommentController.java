@@ -3,11 +3,9 @@ package com.tabia.projeto_tecnico.controller;
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +30,18 @@ public class CommentController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<CommentDTO>> findById(@PathVariable("id") Long id){
         Optional<CommentDTO> comment = commentService.findById(id);
+        return ResponseEntity.ok(comment);
+    }
+
+    @PostMapping
+    public ResponseEntity<CommentDTO> post(@RequestBody CommentDTO commentDTO){
+        CommentDTO comment = commentService.save(commentDTO);
+        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CommentDTO> put (@PathVariable Long id, @RequestBody CommentDTO commentDTO){
+        CommentDTO comment = commentService.update(id,commentDTO);
         return ResponseEntity.ok(comment);
     }
 
