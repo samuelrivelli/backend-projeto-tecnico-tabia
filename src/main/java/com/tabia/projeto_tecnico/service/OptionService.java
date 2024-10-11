@@ -7,7 +7,6 @@ import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.repository.OptionRepository;
 import com.tabia.projeto_tecnico.repository.PollRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,13 @@ public class OptionService {
         }
 
         return  Optional.of(convertToDTO(option.get()));
+    }
+
+    public OptionDTO save(OptionDTO optionDTO){
+        Option option = create(optionDTO);
+        Option savedOption = optionRepository.save(option);
+
+        return convertToDTO(savedOption);
     }
 
 

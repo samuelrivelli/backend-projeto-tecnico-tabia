@@ -36,15 +36,15 @@ public class PollController {
     }
 
     @PostMapping
-    public ResponseEntity<Poll> post (@RequestBody PollDTO pollDTO){
-        Optional<Poll> poll = Optional.ofNullable(pollService.save(pollDTO));
+    public ResponseEntity<PollDTO> post (@RequestBody PollDTO pollDTO){
+        Optional<PollDTO> poll = Optional.ofNullable(pollService.save(pollDTO));
         return new ResponseEntity<>(poll.get(), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PollDTO> put (@PathVariable Long id, @RequestBody PollDTO pollDTO){
         Poll updatedPoll = pollService.update(id, pollDTO);
-        PollDTO updatedPollDTO = pollService.convertToDTO(updatedPoll); // Converter para DTO
+        PollDTO updatedPollDTO = pollService.convertToDTO(updatedPoll);
         return ResponseEntity.ok(updatedPollDTO);
     }
 

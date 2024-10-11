@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,9 +43,11 @@ public class PollService {
         return Optional.of(convertToDTO(poll.get()));
     }
 
-    public Poll save(PollDTO pollDTO){
+    public PollDTO save(PollDTO pollDTO) {
         Poll poll = create(pollDTO);
-        return pollRepository.save(poll);
+        Poll savedPoll = pollRepository.save(poll);
+
+        return convertToDTO(savedPoll);
     }
 
     public Poll update(Long id, PollDTO pollDTO) {
@@ -84,13 +85,15 @@ public class PollService {
         pollDTO.setUserId(poll.getUser().getId());
 
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
-                .map(option -> new OptionDTO(option.getId(), option.getText(), option.getPoll().getId()))
+                .map(option -> new OptionDTO(option.getId(), option.getText(), poll.getId()))
                 .collect(Collectors.toList());
 
         pollDTO.setOptions(optionDTOs);
 
         return pollDTO;
     }
+
+
 
     public Poll create(PollDTO pollDTO) {
         Poll poll = new Poll();

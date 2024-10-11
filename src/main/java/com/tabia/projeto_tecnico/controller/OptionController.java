@@ -3,11 +3,9 @@ package com.tabia.projeto_tecnico.controller;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.service.OptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +31,12 @@ public class OptionController {
     public ResponseEntity<Optional<OptionDTO>> findById(@PathVariable("id") Long id){
         Optional<OptionDTO> option = optionService.findById(id);
         return ResponseEntity.ok(option);
+    }
+
+    @PostMapping
+    public ResponseEntity<OptionDTO> post(@RequestBody OptionDTO optionDTO){
+        Optional<OptionDTO> option = Optional.ofNullable(optionService.save(optionDTO));
+        return new ResponseEntity<>(option.get(), HttpStatus.CREATED);
     }
 
 }
