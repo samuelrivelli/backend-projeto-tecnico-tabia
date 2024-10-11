@@ -3,6 +3,7 @@ package com.tabia.projeto_tecnico.service;
 import com.tabia.projeto_tecnico.exceptions.OptionNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
+import com.tabia.projeto_tecnico.model.dto.VoteDTO;
 import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.repository.OptionRepository;
@@ -79,6 +80,11 @@ public class OptionService {
        optionDTO.setId(option.getId());
        optionDTO.setText(option.getText());
        optionDTO.setPoolId(option.getPoll().getId());
+
+        List<VoteDTO> voteDTOs = option.getVotes().stream()
+                .map(vote -> new VoteDTO(vote.getId(), vote.getUser().getId(), vote.getOption().getId(), vote.getPoll().getId()))
+                .collect(Collectors.toList());
+        optionDTO.setVotes(voteDTOs);
 
        return optionDTO;
     }

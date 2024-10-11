@@ -4,6 +4,7 @@ import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
+import com.tabia.projeto_tecnico.model.dto.VoteDTO;
 import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
@@ -86,14 +87,25 @@ public class PollService {
         pollDTO.setUserId(poll.getUser().getId());
 
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
-                .map(option -> new OptionDTO(option.getId(), option.getText(), poll.getId()))
+                .map(option -> {
+                    List<VoteDTO> voteDTOs = option.getVotes().stream()
+                            .map(vote -> new VoteDTO(vote.getId(), vote.getUser().getId(), vote.getOption().getId(), vote.getPoll().getId()))
+                            .collect(Collectors.toList());
+
+                    OptionDTO optionDTO = new OptionDTO();
+                    optionDTO.setId(option.getId());
+                    optionDTO.setText(option.getText());
+                    optionDTO.setPoolId(poll.getId());
+                    optionDTO.setVotes(voteDTOs);
+
+                    return optionDTO;
+                })
                 .collect(Collectors.toList());
 
         pollDTO.setOptions(optionDTOs);
 
         return pollDTO;
     }
-
 
 
     public Poll create(PollDTO pollDTO) {
@@ -111,12 +123,18 @@ public class PollService {
         poll.setUser(user.get());
 
         List<Option> options = pollDTO.getOptions().stream()
-                .map(optionDTO -> new Option(null, optionDTO.getText(), poll)) // Cria nova Option
+                .map(optionDTO -> {
+                    Option option = new Option();
+                    option.setText(optionDTO.getText());
+                    option.setPoll(poll);
+                    return option;
+                })
                 .collect(Collectors.toList());
 
         poll.setOptions(options);
 
-        return poll;
+        return pollRepository.save(poll);
     }
+
 
 }

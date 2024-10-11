@@ -54,6 +54,13 @@ public class VoteService {
         return Optional.of(convertToDTO(vote.get()));
     }
 
+    public VoteDTO save(VoteDTO voteDTO){
+        Vote vote = create(voteDTO);
+        Vote savedVote = voteRepository.save(vote);
+
+        return convertToDTO(savedVote);
+    }
+
     public VoteDTO convertToDTO(Vote vote){
         VoteDTO voteDTO = new VoteDTO();
         voteDTO.setId(vote.getId());
@@ -62,7 +69,6 @@ public class VoteService {
         voteDTO.setPollId(vote.getPoll().getId());
 
         return voteDTO;
-
     }
 
     public Vote create(VoteDTO voteDTO){
