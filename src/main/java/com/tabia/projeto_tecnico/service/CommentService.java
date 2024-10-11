@@ -5,7 +5,6 @@ import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.model.entity.Comment;
-import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.CommentRepository;
@@ -53,6 +52,39 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         return convertToDTO(savedComment);
+    }
+
+    public CommentDTO update(Long id, CommentDTO commentDTO){
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+
+        if(!optionalComment.isPresent()){
+            throw new CommentNotFoundException("Comment not found");
+        }
+
+        Comment existingComment = optionalComment.get();
+
+        existingComment.setContent(commentDTO.getContent());
+        existingComment.setCreatedAt(commentDTO.getCreatedAt());
+
+        if (commentDTO.getUserId() != null){
+            Optional<UserEntity> user = userRepository.findById(commentDTO.getUserId());
+            if(!user.isPresent()){
+                throw new UserNotFoundException("User not found");
+            }
+            existingComment.setUser(user.get());
+        }
+
+        if(commentDTO.getPollId() != null){
+            Optional<Poll> poll = pollRepository.findById(commentDTO.getPollId());
+            if(!poll.isPresent()){
+                throw new PollNotFoundException("Poll not found");
+            }
+            existingComment.setPoll(poll.get());
+        }
+
+        Comment updatedComment = commentRepository.save(existingComment);
+
+        return convertToDTO(updatedComment);
     }
 
     public CommentDTO convertToDTO(Comment comment) {

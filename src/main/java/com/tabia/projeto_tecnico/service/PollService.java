@@ -85,7 +85,6 @@ public class PollService {
         pollDTO.setDescription(poll.getDescription());
         pollDTO.setUserId(poll.getUser().getId());
 
-        // Mapeia as opções
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
                 .map(option -> {
                     Long voteCount = option.getVotes() != null ? (long) option.getVotes().size() : 0;
