@@ -1,15 +1,18 @@
 package com.tabia.projeto_tecnico.service;
 
+import com.tabia.projeto_tecnico.exceptions.CommentNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
+import com.tabia.projeto_tecnico.model.entity.Comment;
 import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.PollRepository;
 import com.tabia.projeto_tecnico.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -43,6 +46,7 @@ public class PollService {
         return Optional.of(convertToDTO(poll.get()));
     }
 
+    @Transactional
     public PollDTO save(PollDTO pollDTO) {
         Poll poll = create(pollDTO);
         Poll savedPoll = pollRepository.save(poll);
@@ -50,6 +54,7 @@ public class PollService {
         return convertToDTO(savedPoll);
     }
 
+    @Transactional
     public PollDTO update(Long id, PollDTO pollDTO) {
         Optional<Poll> optionalPoll = pollRepository.findById(id);
 
@@ -75,6 +80,17 @@ public class PollService {
         return convertToDTO(updatedPoll);
     }
 
+    @Transactional
+    public void delete(Long id){
+        Optional<Poll> poll = pollRepository.findById(id);
+
+        if(!poll.isPresent()){
+            throw new PollNotFoundException("Poll not found");
+        }
+
+        pollRepository.delete(poll.get());
+
+    }
 
 
 

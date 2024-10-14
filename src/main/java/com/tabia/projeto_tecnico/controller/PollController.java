@@ -47,7 +47,11 @@ public class PollController {
         return ResponseEntity.ok(updatedPoll);
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        pollService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }

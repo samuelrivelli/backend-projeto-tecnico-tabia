@@ -43,6 +43,7 @@ public class OptionService {
         return  Optional.of(convertToDTO(option.get()));
     }
 
+    @Transactional
     public OptionDTO save(OptionDTO optionDTO){
         Option option = create(optionDTO);
         Option savedOption = optionRepository.save(option);
@@ -50,6 +51,7 @@ public class OptionService {
         return convertToDTO(savedOption);
     }
 
+    @Transactional
     public OptionDTO update(Long id, OptionDTO optionDTO){
         Optional<Option> optionalOption = optionRepository.findById(id);
 
