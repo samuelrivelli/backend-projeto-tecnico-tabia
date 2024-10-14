@@ -8,6 +8,7 @@ import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.repository.OptionRepository;
 import com.tabia.projeto_tecnico.repository.PollRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +72,18 @@ public class OptionService {
         Option updatedOption = optionRepository.save(existingOption);
 
         return convertToDTO(updatedOption);
+    }
+
+    @Transactional
+    public void delete(Long id){
+        Optional<Option> option = optionRepository.findById(id);
+
+        if(!option.isPresent()){
+            throw new OptionNotFoundException("Option not found");
+        }
+
+        optionRepository.delete(option.get());
+
     }
 
 
