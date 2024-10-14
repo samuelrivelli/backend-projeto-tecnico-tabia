@@ -1,9 +1,12 @@
 package com.tabia.projeto_tecnico.service;
 
+import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.UserDTO;
+import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,18 @@ public class UserService  {
         }
 
         return Optional.of(convertToDTO(userEntity.get()));
+    }
+
+    @Transactional
+    public void delete(Long id){
+        Optional<UserEntity> user = userRepository.findById(id);
+
+        if(!user.isPresent()){
+            throw new UserNotFoundException("Poll not found");
+        }
+
+        userRepository.delete(user.get());
+
     }
 
 

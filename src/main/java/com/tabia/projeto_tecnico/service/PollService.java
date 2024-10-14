@@ -91,8 +91,6 @@ public class PollService {
 
     }
 
-
-
     public PollDTO convertToDTO(Poll poll) {
         PollDTO pollDTO = new PollDTO();
         pollDTO.setId(poll.getId());

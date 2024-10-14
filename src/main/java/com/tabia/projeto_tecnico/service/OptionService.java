@@ -88,8 +88,6 @@ public class OptionService {
 
     }
 
-
-
     public OptionDTO convertToDTO(Option option) {
        OptionDTO optionDTO = new OptionDTO();
        optionDTO.setId(option.getId());
