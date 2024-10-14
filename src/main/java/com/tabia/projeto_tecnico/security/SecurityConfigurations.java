@@ -20,23 +20,25 @@ public class SecurityConfigurations {
 
     @Autowired
     JwtAuthFilter securityFilter;
-//
+
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        return  httpSecurity
+//        return httpSecurity
 //                .csrf(csrf -> csrf.disable())
 //                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers(HttpMethod.POST, "/auth/register/user").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
 //                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-//                        .requestMatchers("/api/v1/users/**").permitAll()
-//                        .requestMatchers( "/api/v1/comments/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
-//                        .anyRequest().authenticated()
+//                        .requestMatchers(HttpMethod.POST, "/api/v1/comments/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/v1/users/**").hasRole("ADMIN")
+//                        .anyRequest().permitAll()
 //                )
 //                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 //                .build();
 //    }
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -44,6 +46,7 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+
                         .anyRequest().permitAll() // Permitir acesso a todas as requisições
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
