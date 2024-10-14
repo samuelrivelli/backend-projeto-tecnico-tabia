@@ -1,0 +1,178 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: samuel
+      comment: "Limpeza e inserção de novos dados de teste nas tabelas users, poll, option, vote e comment"
+      changes:
+
+        # Limpeza de dados existentes
+        - delete:
+            tableName: comment
+            where: "1=1"  # Deleta todas as entradas
+
+        - delete:
+            tableName: vote
+            where: "1=1"  # Deleta todas as entradas
+
+        - delete:
+            tableName: option
+            where: "1=1"  # Deleta todas as entradas
+
+        - delete:
+            tableName: poll
+            where: "1=1"  # Deleta todas as entradas
+
+        - delete:
+            tableName: users
+            where: "1=1"  # Deleta todas as entradas
+
+        # Inserção de novos dados
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "admin"
+              - column:
+                  name: password
+                  value: "admin123"
+              - column:
+                  name: role
+                  value: "ADMIN"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "user1"
+              - column:
+                  name: password
+                  value: "user123"
+              - column:
+                  name: role
+                  value: "USER"
+
+        - insert:
+            tableName: poll
+            columns:
+              - column:
+                  name: title
+                  value: "Qual é o seu carro favorito?"
+              - column:
+                  name: description
+                  value: "Escolha o carro que você mais gosta."
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username = 'admin')"
+
+        - insert:
+            tableName: poll
+            columns:
+              - column:
+                  name: title
+                  value: "Qual é a sua fruta favorita?"
+              - column:
+                  name: description
+                  value: "Escolha a fruta que você mais gosta."
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username = 'admin')"
+
+        - insert:
+            tableName: option
+            columns:
+              - column:
+                  name: text
+                  value: "Fusca"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu carro favorito?')"
+
+        - insert:
+            tableName: option
+            columns:
+              - column:
+                  name: text
+                  value: "Civic"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu carro favorito?')"
+
+        - insert:
+            tableName: option
+            columns:
+              - column:
+                  name: text
+                  value: "Banana"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é a sua fruta favorita?')"
+
+        - insert:
+            tableName: option
+            columns:
+              - column:
+                  name: text
+                  value: "Maçã"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é a sua fruta favorita?')"
+
+        - insert:
+            tableName: vote
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
+              - column:
+                  name: option_id
+                  valueComputed: "(SELECT id FROM option WHERE text = 'Fusca')"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu carro favorito?')"
+
+        - insert:
+            tableName: vote
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
+              - column:
+                  name: option_id
+                  valueComputed: "(SELECT id FROM option WHERE text = 'Banana')"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é a sua fruta favorita?')"
+
+        - insert:
+            tableName: comment
+            columns:
+              - column:
+                  name: content
+                  value: "O Fusca é um clássico!"
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu carro favorito?')"
+              - column:
+                  name: created_at
+                  valueDate: "2024-10-14 12:00:00"
+
+        - insert:
+            tableName: comment
+            columns:
+              - column:
+                  name: content
+                  value: "Banana é muito saudável!"
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
+              - column:
+                  name: poll_id
+                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é a sua fruta favorita?')"
+              - column:
+                  name: created_at
+                  valueDate: "2024-10-14 12:05:00"

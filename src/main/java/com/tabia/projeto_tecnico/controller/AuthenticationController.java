@@ -1,6 +1,7 @@
 package com.tabia.projeto_tecnico.controller;
 
 
+import com.tabia.projeto_tecnico.enums.UserRole;
 import com.tabia.projeto_tecnico.model.dto.AuthenticationDTO;
 import com.tabia.projeto_tecnico.model.dto.LoginResponseDTO;
 import com.tabia.projeto_tecnico.model.dto.RegisterDTO;
@@ -9,9 +10,11 @@ import com.tabia.projeto_tecnico.repository.UserRepository;
 import com.tabia.projeto_tecnico.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,15 +42,38 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid RegisterDTO data){
-        if(this.repository.findByUsername(data.username()) != null) return ResponseEntity.badRequest().build();
-
+    @PostMapping("/register/user")
+    public ResponseEntity<UserEntity> registerUser(@RequestBody @Valid RegisterDTO data) {
+        if (this.repository.findByUsername(data.username()) != null) {
+            return ResponseEntity.badRequest().build();
+        }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserEntity newUser = new UserEntity(data.username(), encryptedPassword, data.role());
+
+        UserRole userRole = UserRole.USER;
+
+        UserEntity newUser = new UserEntity(data.username(), encryptedPassword, userRole);
 
         this.repository.save(newUser);
 
         return ResponseEntity.ok(newUser);
     }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<UserEntity> registerAdmin(@RequestBody @Valid RegisterDTO data) {
+
+        if (this.repository.findByUsername(data.username()) != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        UserRole userRole = UserRole.ADMIN;
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        UserEntity newAdmin = new UserEntity(data.username(), encryptedPassword, userRole);
+
+        this.repository.save(newAdmin);
+
+        return ResponseEntity.ok(newAdmin);
+    }
+
+
 }
