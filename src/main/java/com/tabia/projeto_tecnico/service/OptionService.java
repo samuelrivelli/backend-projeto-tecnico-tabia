@@ -101,6 +101,9 @@ public class OptionService {
                 .collect(Collectors.toList());
         optionDTO.setVotes(voteDTOs);
 
+        Long voteCount = option.getVotes() != null ? (long) option.getVotes().size() : 0;
+        optionDTO.setVoteCount(voteCount);
+
        return optionDTO;
     }
 
