@@ -10,6 +10,7 @@ import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.CommentRepository;
 import com.tabia.projeto_tecnico.repository.PollRepository;
 import com.tabia.projeto_tecnico.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,7 @@ public class CommentService {
         return Optional.of(convertToDTO(comment.get()));
     }
 
+    @Transactional
     public CommentDTO save(CommentDTO commentDTO){
         Comment comment = create(commentDTO);
         Comment savedComment = commentRepository.save(comment);
@@ -54,6 +56,7 @@ public class CommentService {
         return convertToDTO(savedComment);
     }
 
+    @Transactional
     public CommentDTO update(Long id, CommentDTO commentDTO){
         Optional<Comment> optionalComment = commentRepository.findById(id);
 
@@ -86,6 +89,19 @@ public class CommentService {
 
         return convertToDTO(updatedComment);
     }
+
+    @Transactional
+    public void delete(Long id){
+        Optional<Comment> comment = commentRepository.findById(id);
+
+        if(!comment.isPresent()){
+            throw new CommentNotFoundException("Comment not found");
+        }
+
+        commentRepository.delete(comment.get());
+
+    }
+
 
     public CommentDTO convertToDTO(Comment comment) {
        CommentDTO commentDTO = new CommentDTO();
