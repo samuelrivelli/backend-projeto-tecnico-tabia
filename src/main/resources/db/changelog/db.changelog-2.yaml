@@ -1,102 +1,102 @@
-databaseChangeLog:
-  - changeSet:
-      id: 6
-      author: samuel
-      comment: "Inserção de dados de teste nas tabelas users, poll, option, vote e comment"
-      changes:
-
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: "admin"
-              - column:
-                  name: password
-                  value: "admin123"
-              - column:
-                  name: role
-                  value: "ADMIN"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: "user1"
-              - column:
-                  name: password
-                  value: "user123"
-              - column:
-                  name: role
-                  value: "USER"
-
-
-        - insert:
-            tableName: poll
-            columns:
-              - column:
-                  name: title
-                  value: "Qual é o seu sistema operacional favorito?"
-              - column:
-                  name: description
-                  value: "Escolha o sistema operacional que você mais usa."
-              - column:
-                  name: user_id
-                  valueComputed: "(SELECT id FROM users WHERE username = 'admin')"
-
-        - insert:
-            tableName: option
-            columns:
-              - column:
-                  name: text
-                  value: "Windows"
-              - column:
-                  name: poll_id
-                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
-        - insert:
-            tableName: option
-            columns:
-              - column:
-                  name: text
-                  value: "Linux"
-              - column:
-                  name: poll_id
-                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
-        - insert:
-            tableName: option
-            columns:
-              - column:
-                  name: text
-                  value: "macOS"
-              - column:
-                  name: poll_id
-                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
-
-        - insert:
-            tableName: vote
-            columns:
-              - column:
-                  name: user_id
-                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
-              - column:
-                  name: option_id
-                  valueComputed: "(SELECT id FROM option WHERE text = 'Linux')"
-              - column:
-                  name: poll_id
-                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
-
-        - insert:
-            tableName: comment
-            columns:
-              - column:
-                  name: content
-                  value: "Eu prefiro o Linux pela liberdade que oferece."
-              - column:
-                  name: user_id
-                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
-              - column:
-                  name: poll_id
-                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
-              - column:
-                  name: created_at
-                  valueDate: "2024-10-14 12:00:00"
+#databaseChangeLog:
+#  - changeSet:
+#      id: 6
+#      author: samuel
+#      comment: "Inserção de dados de teste nas tabelas users, poll, option, vote e comment"
+#      changes:
+#
+#        - insert:
+#            tableName: users
+#            columns:
+#              - column:
+#                  name: username
+#                  value: "admin"
+#              - column:
+#                  name: password
+#                  value: "admin123"
+#              - column:
+#                  name: role
+#                  value: "ADMIN"
+#        - insert:
+#            tableName: users
+#            columns:
+#              - column:
+#                  name: username
+#                  value: "user1"
+#              - column:
+#                  name: password
+#                  value: "user123"
+#              - column:
+#                  name: role
+#                  value: "USER"
+#
+#
+#        - insert:
+#            tableName: poll
+#            columns:
+#              - column:
+#                  name: title
+#                  value: "Qual é o seu sistema operacional favorito?"
+#              - column:
+#                  name: description
+#                  value: "Escolha o sistema operacional que você mais usa."
+#              - column:
+#                  name: user_id
+#                  valueComputed: "(SELECT id FROM users WHERE username = 'admin')"
+#
+#        - insert:
+#            tableName: option
+#            columns:
+#              - column:
+#                  name: text
+#                  value: "Windows"
+#              - column:
+#                  name: poll_id
+#                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
+#        - insert:
+#            tableName: option
+#            columns:
+#              - column:
+#                  name: text
+#                  value: "Linux"
+#              - column:
+#                  name: poll_id
+#                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
+#        - insert:
+#            tableName: option
+#            columns:
+#              - column:
+#                  name: text
+#                  value: "macOS"
+#              - column:
+#                  name: poll_id
+#                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
+#
+#        - insert:
+#            tableName: vote
+#            columns:
+#              - column:
+#                  name: user_id
+#                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
+#              - column:
+#                  name: option_id
+#                  valueComputed: "(SELECT id FROM option WHERE text = 'Linux')"
+#              - column:
+#                  name: poll_id
+#                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
+#
+#        - insert:
+#            tableName: comment
+#            columns:
+#              - column:
+#                  name: content
+#                  value: "Eu prefiro o Linux pela liberdade que oferece."
+#              - column:
+#                  name: user_id
+#                  valueComputed: "(SELECT id FROM users WHERE username = 'user1')"
+#              - column:
+#                  name: poll_id
+#                  valueComputed: "(SELECT id FROM poll WHERE title = 'Qual é o seu sistema operacional favorito?')"
+#              - column:
+#                  name: created_at
+#                  valueDate: "2024-10-14 12:00:00"
