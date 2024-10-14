@@ -60,13 +60,6 @@ public class AuthenticationController {
 
     @PostMapping("/register/admin")
     public ResponseEntity<UserEntity> registerAdmin(@RequestBody @Valid RegisterDTO data) {
-        // Remova ou comente a verificação de papel para permitir que qualquer um registre admins
-        // boolean isAdmin = authentication.getAuthorities().stream()
-        //         .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
-
-        // if (!isAdmin) {
-        //     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        // }
 
         if (this.repository.findByUsername(data.username()) != null) {
             return ResponseEntity.badRequest().build();
