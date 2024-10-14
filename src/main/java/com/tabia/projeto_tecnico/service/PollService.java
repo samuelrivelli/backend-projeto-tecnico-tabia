@@ -1,12 +1,10 @@
 package com.tabia.projeto_tecnico.service;
 
-import com.tabia.projeto_tecnico.exceptions.CommentNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
 import com.tabia.projeto_tecnico.model.dto.OptionDTO;
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
-import com.tabia.projeto_tecnico.model.entity.Comment;
 import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
@@ -15,6 +13,7 @@ import com.tabia.projeto_tecnico.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
