@@ -45,4 +45,10 @@ public class OptionController {
         return ResponseEntity.ok(option);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        optionService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

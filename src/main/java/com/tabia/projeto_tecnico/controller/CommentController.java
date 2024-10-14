@@ -1,6 +1,7 @@
 package com.tabia.projeto_tecnico.controller;
 
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
+import com.tabia.projeto_tecnico.model.entity.Comment;
 import com.tabia.projeto_tecnico.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,12 @@ public class CommentController {
     public ResponseEntity<CommentDTO> put (@PathVariable Long id, @RequestBody CommentDTO commentDTO){
         CommentDTO comment = commentService.update(id,commentDTO);
         return ResponseEntity.ok(comment);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        commentService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

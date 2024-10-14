@@ -25,7 +25,10 @@ public class UserEntity implements UserDetails {
     private Long id;
     private String username;
     private String password;
+
+    @Enumerated(EnumType.STRING)
     private UserRole role;
+
 
     public UserEntity(String username, String password, UserRole role) {
         this.username = username;

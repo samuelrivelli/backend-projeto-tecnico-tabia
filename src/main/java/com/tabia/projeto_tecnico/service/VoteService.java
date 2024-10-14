@@ -13,6 +13,7 @@ import com.tabia.projeto_tecnico.repository.OptionRepository;
 import com.tabia.projeto_tecnico.repository.PollRepository;
 import com.tabia.projeto_tecnico.repository.UserRepository;
 import com.tabia.projeto_tecnico.repository.VoteRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,11 +55,24 @@ public class VoteService {
         return Optional.of(convertToDTO(vote.get()));
     }
 
+    @Transactional
     public VoteDTO save(VoteDTO voteDTO){
         Vote vote = create(voteDTO);
         Vote savedVote = voteRepository.save(vote);
 
         return convertToDTO(savedVote);
+    }
+
+    @Transactional
+    public void delete(Long id){
+        Optional<Vote> vote = voteRepository.findById(id);
+
+        if(!vote.isPresent()){
+            throw new VoteNotFoundException("Vote not found");
+        }
+
+        voteRepository.delete(vote.get());
+
     }
 
 

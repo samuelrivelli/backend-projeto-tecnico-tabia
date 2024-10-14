@@ -10,8 +10,10 @@ import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.model.entity.UserEntity;
 import com.tabia.projeto_tecnico.repository.PollRepository;
 import com.tabia.projeto_tecnico.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,6 +45,7 @@ public class PollService {
         return Optional.of(convertToDTO(poll.get()));
     }
 
+    @Transactional
     public PollDTO save(PollDTO pollDTO) {
         Poll poll = create(pollDTO);
         Poll savedPoll = pollRepository.save(poll);
@@ -50,6 +53,7 @@ public class PollService {
         return convertToDTO(savedPoll);
     }
 
+    @Transactional
     public PollDTO update(Long id, PollDTO pollDTO) {
         Optional<Poll> optionalPoll = pollRepository.findById(id);
 
@@ -75,8 +79,17 @@ public class PollService {
         return convertToDTO(updatedPoll);
     }
 
+    @Transactional
+    public void delete(Long id){
+        Optional<Poll> poll = pollRepository.findById(id);
 
+        if(!poll.isPresent()){
+            throw new PollNotFoundException("Poll not found");
+        }
 
+        pollRepository.delete(poll.get());
+
+    }
 
     public PollDTO convertToDTO(Poll poll) {
         PollDTO pollDTO = new PollDTO();

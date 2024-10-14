@@ -8,6 +8,7 @@ import com.tabia.projeto_tecnico.model.entity.Option;
 import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.repository.OptionRepository;
 import com.tabia.projeto_tecnico.repository.PollRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class OptionService {
         return  Optional.of(convertToDTO(option.get()));
     }
 
+    @Transactional
     public OptionDTO save(OptionDTO optionDTO){
         Option option = create(optionDTO);
         Option savedOption = optionRepository.save(option);
@@ -49,6 +51,7 @@ public class OptionService {
         return convertToDTO(savedOption);
     }
 
+    @Transactional
     public OptionDTO update(Long id, OptionDTO optionDTO){
         Optional<Option> optionalOption = optionRepository.findById(id);
 
@@ -73,7 +76,17 @@ public class OptionService {
         return convertToDTO(updatedOption);
     }
 
+    @Transactional
+    public void delete(Long id){
+        Optional<Option> option = optionRepository.findById(id);
 
+        if(!option.isPresent()){
+            throw new OptionNotFoundException("Option not found");
+        }
+
+        optionRepository.delete(option.get());
+
+    }
 
     public OptionDTO convertToDTO(Option option) {
        OptionDTO optionDTO = new OptionDTO();
@@ -85,6 +98,9 @@ public class OptionService {
                 .map(vote -> new VoteDTO(vote.getId(), vote.getUser().getId(), vote.getOption().getId(), vote.getPoll().getId()))
                 .collect(Collectors.toList());
         optionDTO.setVotes(voteDTOs);
+
+        Long voteCount = option.getVotes() != null ? (long) option.getVotes().size() : 0;
+        optionDTO.setVoteCount(voteCount);
 
        return optionDTO;
     }

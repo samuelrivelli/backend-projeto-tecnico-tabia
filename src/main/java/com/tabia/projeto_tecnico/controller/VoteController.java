@@ -39,4 +39,10 @@ public class VoteController {
         VoteDTO createdVote = voteService.save(voteDTO);
         return new ResponseEntity<>(createdVote, HttpStatus.CREATED );
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        voteService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
