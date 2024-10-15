@@ -14,6 +14,10 @@ public class CommentDTO {
     private Long id;
     private String content;
     private Long userId;
+    private String username;
     private Long pollId;
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public CommentDTO(Long id, String content, Long userId, Long pollId, LocalDateTime createdAt) {
+    }
 }
