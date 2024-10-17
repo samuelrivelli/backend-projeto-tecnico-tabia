@@ -1,14 +1,13 @@
 package com.tabia.projeto_tecnico.controller;
 
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
-import com.tabia.projeto_tecnico.model.entity.Poll;
 import com.tabia.projeto_tecnico.service.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.annotation.Repeatable;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +17,12 @@ public class PollController {
 
     private PollService pollService;
 
+    private final SimpMessagingTemplate messagingTemplate;
+
     @Autowired
-    public PollController(PollService pollService){
+    public PollController(PollService pollService, SimpMessagingTemplate messagingTemplate){
         this.pollService = pollService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @GetMapping
@@ -38,6 +40,7 @@ public class PollController {
     @PostMapping
     public ResponseEntity<PollDTO> post (@RequestBody PollDTO pollDTO){
         PollDTO poll = pollService.save(pollDTO);
+        messagingTemplate.convertAndSend("/topic/polls", poll);
         return new ResponseEntity<>(poll, HttpStatus.CREATED);
     }
 

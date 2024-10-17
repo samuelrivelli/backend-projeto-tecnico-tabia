@@ -14,6 +14,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +30,7 @@ public class PollService {
     private UserRepository userRepository;
 
     public List<PollDTO> findAll() {
-        List<Poll> polls = pollRepository.findAll() ;
+        List<Poll> polls = pollRepository.findAllByOrderByCreatedAtDesc() ;
 
         return polls.stream()
                 .map(this::convertToDTO)
@@ -97,6 +99,8 @@ public class PollService {
         pollDTO.setTitle(poll.getTitle());
         pollDTO.setDescription(poll.getDescription());
         pollDTO.setUserId(poll.getUser().getId());
+        pollDTO.setCreatedAt(poll.getCreatedAt());
+
 
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
                 .map(option -> {
@@ -115,6 +119,7 @@ public class PollService {
 
 
         List<CommentDTO> commentDTOs = poll.getComments().stream()
+                .sorted((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()))
                 .map(comment -> new CommentDTO(
                         comment.getId(),
                         comment.getContent(),
@@ -137,6 +142,7 @@ public class PollService {
 
         poll.setTitle(pollDTO.getTitle());
         poll.setDescription(pollDTO.getDescription());
+        poll.setCreatedAt(LocalDateTime.now());
 
         Optional<UserEntity> user = userRepository.findById(pollDTO.getUserId());
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,4 +36,7 @@ public class Poll {
 
     @OneToMany(mappedBy="poll", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<Comment> comments = new ArrayList<>();
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }
