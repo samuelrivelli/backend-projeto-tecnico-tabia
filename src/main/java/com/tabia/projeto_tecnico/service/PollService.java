@@ -131,7 +131,7 @@ public class PollService {
 
         pollDTO.setComments(commentDTOs);
 
-        return pollDTO;
+        return pollDTO;//
     }
 
 
