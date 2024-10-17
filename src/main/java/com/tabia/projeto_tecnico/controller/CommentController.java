@@ -1,7 +1,6 @@
 package com.tabia.projeto_tecnico.controller;
 
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
-import com.tabia.projeto_tecnico.model.entity.Comment;
 import com.tabia.projeto_tecnico.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

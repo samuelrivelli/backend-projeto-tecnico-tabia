@@ -110,6 +110,7 @@ public class CommentService {
        commentDTO.setUserId(comment.getUser().getId());
        commentDTO.setPollId(comment.getPoll().getId());
        commentDTO.setCreatedAt(comment.getCreatedAt());
+       commentDTO.setUsername(comment.getUser().getUsername());
 
        return commentDTO;
     }

@@ -21,37 +21,21 @@ public class SecurityConfigurations {
     @Autowired
     JwtAuthFilter securityFilter;
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        return httpSecurity
-//                .csrf(csrf -> csrf.disable())
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers(HttpMethod.POST, "/auth/register/user").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/v1/comments/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/v1/users/**").hasRole("ADMIN")
-//                        .anyRequest().permitAll()
-//                )
-//                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
-
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-
-                        .anyRequest().permitAll() // Permitir acesso a todas as requisições
+                        .requestMatchers(HttpMethod.POST, "/auth/register/user").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasRole("ADMIN")
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
 
     @Bean

@@ -1,4 +1,4 @@
 package com.tabia.projeto_tecnico.model.dto;
 
-public record LoginResponseDTO(String token) {
+public record LoginResponseDTO(String token, Long userId) {
 }
