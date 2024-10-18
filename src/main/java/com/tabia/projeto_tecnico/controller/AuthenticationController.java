@@ -38,7 +38,7 @@ public class AuthenticationController {
         var user = (UserEntity) auth.getPrincipal();
         var token = tokenService.generateToken(user);
 
-        return ResponseEntity.ok(new LoginResponseDTO(token, user.getId()));
+        return ResponseEntity.ok(new LoginResponseDTO(token, user.getId(), user.getRole()));
     }
 
 
