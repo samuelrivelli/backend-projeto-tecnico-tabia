@@ -48,7 +48,8 @@ public class AuthenticationController {
 
         UserRole userRole = UserRole.USER;
 
-        UserEntity newUser = new UserEntity(data.username(), encryptedPassword, userRole);
+        UserEntity newUser = new UserEntity(data.username(), data.email(), encryptedPassword, userRole);
+
 
         this.repository.save(newUser);
 
@@ -65,7 +66,7 @@ public class AuthenticationController {
         UserRole userRole = UserRole.ADMIN;
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserEntity newAdmin = new UserEntity(data.username(), encryptedPassword, userRole);
+        UserEntity newAdmin = new UserEntity(data.username(), data.email(), encryptedPassword, userRole);
 
         this.repository.save(newAdmin);
 

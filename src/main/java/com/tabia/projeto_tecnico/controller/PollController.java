@@ -1,6 +1,7 @@
 package com.tabia.projeto_tecnico.controller;
 
 import com.tabia.projeto_tecnico.model.dto.PollDTO;
+import com.tabia.projeto_tecnico.service.EmailService;
 import com.tabia.projeto_tecnico.service.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +17,14 @@ import java.util.Optional;
 public class PollController {
 
     private PollService pollService;
-
     private final SimpMessagingTemplate messagingTemplate;
+    private EmailService emailService;
 
     @Autowired
-    public PollController(PollService pollService, SimpMessagingTemplate messagingTemplate){
+    public PollController(PollService pollService, SimpMessagingTemplate messagingTemplate, EmailService emailService){
         this.pollService = pollService;
         this.messagingTemplate = messagingTemplate;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -38,11 +40,22 @@ public class PollController {
     }
 
     @PostMapping
-    public ResponseEntity<PollDTO> post (@RequestBody PollDTO pollDTO){
+    public ResponseEntity<PollDTO> post(@RequestBody PollDTO pollDTO) {
         PollDTO poll = pollService.save(pollDTO);
+
+        String subject = "Nova Enquete Criada";
+        String text = "Uma nova enquete foi criada: " + poll.getTitle();
+
+        try {
+            emailService.sendEmailToAllUsers(subject, text);
+        } catch (Exception e) {
+            System.err.println("Erro ao enviar email: " + e.getMessage());
+        }
+
         messagingTemplate.convertAndSend("/topic/polls", poll);
         return new ResponseEntity<>(poll, HttpStatus.CREATED);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<PollDTO> put(@PathVariable Long id, @RequestBody PollDTO pollDTO) {
