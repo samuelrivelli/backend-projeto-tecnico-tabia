@@ -5,6 +5,7 @@ import com.tabia.projeto_tecnico.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class EmailService {
     @Autowired
     private UserRepository userRepository;
 
+    @Async
     public void sendEmailToAllUsers(String subject, String text, Long pollId) {
         List<UserEntity> users = userRepository.findAll();
         String pollLink = "http://localhost:3000/poll/" + pollId + "/comments";
