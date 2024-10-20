@@ -17,25 +17,23 @@ public class EmailService {
     @Autowired
     private UserRepository userRepository;
 
-    public void sendEmailToAllUsers(String subject, String text) {
+    public void sendEmailToAllUsers(String subject, String text, Long pollId) {
         List<UserEntity> users = userRepository.findAll();
+        String pollLink = "http://localhost:3000/poll/" + pollId + "/comments";
 
         for (UserEntity user : users) {
-            String email = user.getEmail();
-
-            if (email != null && !email.isEmpty()) {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setTo(email);
-                message.setSubject(subject);
-                message.setText(text);
+            if (user.getEmail() != null && !user.getEmail().isEmpty()) {
                 try {
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setTo(user.getEmail());
+                    message.setSubject(subject);
+                    message.setText(text + "\n\nAcesse a enquete pelo link: " + pollLink);
                     emailSender.send(message);
                 } catch (Exception e) {
-                    System.err.println("Erro ao enviar email para " + email + ": " + e.getMessage());
+                    System.out.println("Erro ao enviar email para " + user.getEmail() + ": " + e.getMessage());
                 }
-            } else {
-                System.out.println("Usuário " + user.getUsername() + " não possui um email válido.");
             }
         }
     }
 }
+

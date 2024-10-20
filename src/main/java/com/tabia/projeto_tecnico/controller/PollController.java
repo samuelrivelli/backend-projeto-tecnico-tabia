@@ -47,7 +47,7 @@ public class PollController {
         String text = "Uma nova enquete foi criada: " + poll.getTitle();
 
         try {
-            emailService.sendEmailToAllUsers(subject, text);
+            emailService.sendEmailToAllUsers(subject, text, poll.getId());
         } catch (Exception e) {
             System.err.println("Erro ao enviar email: " + e.getMessage());
         }
