@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth")
@@ -51,7 +48,8 @@ public class AuthenticationController {
 
         UserRole userRole = UserRole.USER;
 
-        UserEntity newUser = new UserEntity(data.username(), encryptedPassword, userRole);
+        UserEntity newUser = new UserEntity(data.username(), data.email(), encryptedPassword, userRole);
+
 
         this.repository.save(newUser);
 
@@ -68,12 +66,39 @@ public class AuthenticationController {
         UserRole userRole = UserRole.ADMIN;
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserEntity newAdmin = new UserEntity(data.username(), encryptedPassword, userRole);
+        UserEntity newAdmin = new UserEntity(data.username(), data.email(), encryptedPassword, userRole);
 
         this.repository.save(newAdmin);
 
         return ResponseEntity.ok(newAdmin);
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody @Valid RegisterDTO data) {
 
+        var existingUser = this.repository.findById(id);
+        if (existingUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UserEntity user = existingUser.get();
+
+        if (data.username() != null && !data.username().isEmpty()) {
+            if (this.repository.findByUsername(data.username()) != null) {
+                return ResponseEntity.badRequest().body(null);
+            }
+            user.setUsername(data.username());
+        }
+
+        if (data.password() != null && !data.password().isEmpty()) {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+            user.setPassword(encryptedPassword);
+        }
+
+        this.repository.save(user);
+
+        return ResponseEntity.ok(user);
+    }
 }
+
+

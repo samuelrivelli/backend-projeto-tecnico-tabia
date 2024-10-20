@@ -29,6 +29,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/register/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/auth/update/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )

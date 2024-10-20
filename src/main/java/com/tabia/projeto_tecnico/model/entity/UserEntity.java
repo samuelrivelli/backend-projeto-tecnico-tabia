@@ -26,15 +26,20 @@ public class UserEntity implements UserDetails {
     private String username;
     private String password;
 
+    @Column(nullable = true)
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
 
-    public UserEntity(String username, String password, UserRole role) {
+    public UserEntity(String username, String email, String password, UserRole role) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
