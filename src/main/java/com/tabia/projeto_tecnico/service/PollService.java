@@ -1,5 +1,6 @@
 package com.tabia.projeto_tecnico.service;
 
+import com.tabia.projeto_tecnico.exceptions.InsufficientOptionsException;
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
@@ -50,6 +51,11 @@ public class PollService {
     @Transactional
     public PollDTO save(PollDTO pollDTO) {
         Poll poll = create(pollDTO);
+
+        if(poll.getOptions().size()<2){
+            throw new InsufficientOptionsException("A poll must have two or more options");
+        }
+
         Poll savedPoll = pollRepository.save(poll);
 
         return convertToDTO(savedPoll);
@@ -133,8 +139,6 @@ public class PollService {
 
         return pollDTO;//
     }
-
-
 
 
     public Poll create(PollDTO pollDTO) {
