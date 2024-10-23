@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-isOpen-column
+      author: samuel
+      changes:
+        - update:
+            tableName: poll
+            columns:
+              - column:
+                  name: is_open
+                  value: true
+            where: "is_open IS NULL"

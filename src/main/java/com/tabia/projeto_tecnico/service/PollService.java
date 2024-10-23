@@ -1,5 +1,6 @@
 package com.tabia.projeto_tecnico.service;
 
+import com.tabia.projeto_tecnico.exceptions.InsufficientOptionsException;
 import com.tabia.projeto_tecnico.exceptions.PollNotFoundException;
 import com.tabia.projeto_tecnico.exceptions.UserNotFoundException;
 import com.tabia.projeto_tecnico.model.dto.CommentDTO;
@@ -13,8 +14,6 @@ import com.tabia.projeto_tecnico.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +49,11 @@ public class PollService {
     @Transactional
     public PollDTO save(PollDTO pollDTO) {
         Poll poll = create(pollDTO);
+
+        if(poll.getOptions().size()<2){
+            throw new InsufficientOptionsException("A poll must have two or more options");
+        }
+
         Poll savedPoll = pollRepository.save(poll);
 
         return convertToDTO(savedPoll);
@@ -67,6 +71,7 @@ public class PollService {
 
         existingPoll.setTitle(pollDTO.getTitle());
         existingPoll.setDescription(pollDTO.getDescription());
+        existingPoll.setIsOpen(pollDTO.getIsOpen());
 
         if (pollDTO.getUserId() != null) {
             Optional<UserEntity> user = userRepository.findById(pollDTO.getUserId());
@@ -93,6 +98,36 @@ public class PollService {
 
     }
 
+    @Transactional
+    public PollDTO openPoll(Long id){
+        Optional<Poll> optionalPoll = pollRepository.findById(id);
+
+        if(!optionalPoll.isPresent()){
+            throw new PollNotFoundException("Poll not found");
+        }
+
+        Poll poll = optionalPoll.get();
+        poll.setIsOpen(true);
+        pollRepository.save(poll);
+
+        return convertToDTO(poll);
+    }
+
+    @Transactional
+    public PollDTO closePoll(Long id){
+        Optional<Poll> optionalPoll = pollRepository.findById(id);
+
+        if(!optionalPoll.isPresent()){
+            throw new PollNotFoundException("Poll not found");
+        }
+
+        Poll poll = optionalPoll.get();
+        poll.setIsOpen(false);
+        pollRepository.save(poll);
+
+        return convertToDTO(poll);
+    }
+
     public PollDTO convertToDTO(Poll poll) {
         PollDTO pollDTO = new PollDTO();
         pollDTO.setId(poll.getId());
@@ -100,6 +135,7 @@ public class PollService {
         pollDTO.setDescription(poll.getDescription());
         pollDTO.setUserId(poll.getUser().getId());
         pollDTO.setCreatedAt(poll.getCreatedAt());
+        pollDTO.setIsOpen(poll.getIsOpen());
 
 
         List<OptionDTO> optionDTOs = poll.getOptions().stream()
@@ -135,14 +171,13 @@ public class PollService {
     }
 
 
-
-
     public Poll create(PollDTO pollDTO) {
         Poll poll = new Poll();
 
         poll.setTitle(pollDTO.getTitle());
         poll.setDescription(pollDTO.getDescription());
         poll.setCreatedAt(LocalDateTime.now());
+        poll.setIsOpen(pollDTO.getIsOpen());
 
         Optional<UserEntity> user = userRepository.findById(pollDTO.getUserId());
 

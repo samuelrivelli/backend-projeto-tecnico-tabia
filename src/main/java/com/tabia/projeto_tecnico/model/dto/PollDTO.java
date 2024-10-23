@@ -19,4 +19,5 @@ public class PollDTO {
     private List<OptionDTO> options;
     private List<CommentDTO> comments;
     private LocalDateTime createdAt;
+    private Boolean isOpen;
 }

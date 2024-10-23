@@ -1,0 +1,11 @@
+databaseChangeLog:
+- changeSet:
+      id: make-isOpen-column-not-null
+      author: samuel
+      changes:
+        - modifyDataType:
+            tableName: poll
+            columnName: is_open
+            newDataType: BOOLEAN
+            constraints:
+              nullable: false

@@ -69,5 +69,17 @@ public class PollController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}/open")
+    public ResponseEntity<PollDTO> openPoll(@PathVariable Long id){
+        PollDTO poll = pollService.openPoll(id);
+        return ResponseEntity.ok(poll);
+    }
+
+    @PutMapping("/{id}/close")
+    public ResponseEntity<PollDTO> closePoll(@PathVariable Long id){
+        PollDTO poll = pollService.closePoll(id);
+        return ResponseEntity.ok(poll);
+    }
+
 
 }

@@ -39,4 +39,17 @@ public class Poll {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+
+    private Boolean isOpen;
+
+    @PrePersist
+    public void prePersist() {
+        if (isOpen == null) {
+            isOpen = true;
+        }
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 }
